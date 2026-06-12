@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ReRhythm — Restoring the Rhythm of Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red: #E53935;
+    --red-dark: #B71C1C;
+    --red-glow: rgba(229,57,53,0.15);
+    --navy: #050510;
+    --navy2: #0A0A1F;
+    --blue: #1565C0;
+    --white: #FFFFFF;
+    --grey: #888899;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(5,5,16,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--grey);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--red);
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--red-dark) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(229,57,53,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(229,57,53,0.1);
+    border: 1px solid rgba(229,57,53,0.3);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    color: #ff6b6b;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 82px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    max-width: 900px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--red); }
+
+  .hero p {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--grey);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: white;
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 0 40px rgba(229,57,53,0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 0 60px rgba(229,57,53,0.4);
+  }
+
+  .btn-secondary {
+    background: var(--card);
+    color: white;
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+  }
+
+  /* ECG Line Animation */
+  .ecg-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 60px auto 0;
+    opacity: 0.3;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .ecg-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawECG 3s 1s ease forwards, ecgPulse 3s 4s infinite;
+  }
+
+  @keyframes drawECG {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes ecgPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ── STATS ── */
+  .stats {
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat {
+    background: var(--navy);
+    padding: 50px 40px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .stat-label {
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.5;
+  }
+
+  /* ── PROBLEM ── */
+  .problem {
+    padding: 120px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .section-tag {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .section-body {
+    font-size: 17px;
+    color: var(--grey);
+    line-height: 1.8;
+  }
+
+  .problem-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .problem-stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .problem-stat-card:hover { border-color: rgba(229,57,53,0.3); }
+
+  .problem-stat-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+
+  .problem-stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--red);
+  }
+
+  .problem-stat-text {
+    font-size: 14px;
+    color: var(--grey);
+    margin-top: 2px;
+  }
+
+  /* ── STAGES ── */
+  .stages {
+    padding: 120px 60px;
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stages-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 70px;
+  }
+
+  .stages-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .stage-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stage-card:hover {
+    border-color: rgba(229,57,53,0.4);
+    transform: translateY(-4px);
+    background: rgba(229,57,53,0.05);
+  }
+
+  .stage-card.active {
+    border-color: var(--red);
+    background: rgba(229,57,53,0.08);
+  }
+
+  .stage-card.active::before {
+    content: 'LIVE';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--red);
+    background: rgba(229,57,53,0.15);
+    padding: 3px 8px;
+    border-radius: 100px;
+  }
+
+  .stage-icon { font-size: 36px; margin-bottom: 16px; }
+
+  .stage-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .stage-desc {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.6;
+  }
+
+  .stage-soon {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--grey);
+    background: rgba(255,255,255,0.05);
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    padding: 120px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .how-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 70px;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .step {
+    background: var(--navy);
+    padding: 50px 40px;
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    color: rgba(229,57,53,0.1);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.7;
+  }
+
+  /* ── FEATURES ── */
+  .features {
+    padding: 120px 60px;
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+  }
+
+  .features-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 70px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    transition: all 0.3s;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(229,57,53,0.3);
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(229,57,53,0.1);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .feature-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.7;
+  }
+
+  /* ── FOUNDER ── */
+  .founder {
+    padding: 120px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .founder-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+  }
+
+  .founder-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
+
+  .founder-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .founder-title {
+    font-size: 14px;
+    color: var(--red);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .founder-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .tag {
+    font-size: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 100px;
+    color: var(--grey);
+  }
+
+  .founder-bio {
+    font-size: 17px;
+    color: var(--grey);
+    line-height: 1.8;
+  }
+
+  .founder-bio strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .founder-quote {
+    margin-top: 32px;
+    padding: 24px 28px;
+    background: rgba(229,57,53,0.06);
+    border-left: 3px solid var(--red);
+    border-radius: 0 12px 12px 0;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.6;
+  }
+
+  /* ── MISSION ── */
+  .mission {
+    padding: 120px 60px;
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .mission-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .mission h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+
+  .mission h2 span { color: var(--red); }
+
+  .mission p {
+    font-size: 18px;
+    color: var(--grey);
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  /* ── PARTNER ── */
+  .partner {
+    padding: 120px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .partner-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 60px;
+  }
+
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .partner-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    transition: all 0.3s;
+  }
+
+  .partner-card:hover {
+    border-color: rgba(229,57,53,0.3);
+    transform: translateY(-4px);
+  }
+
+  .partner-type {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .partner-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .partner-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .partner-list li {
+    font-size: 14px;
+    color: var(--grey);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .partner-list li::before {
+    content: '✓';
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    padding: 120px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(229,57,53,0.1) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta h2 span { color: var(--red); }
+
+  .cta p {
+    font-size: 18px;
+    color: var(--grey);
+    margin-bottom: 48px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .footer-logo span { color: var(--red); }
+
+  .footer-tagline {
+    font-size: 13px;
+    color: var(--grey);
+    margin-top: 4px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--grey);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--grey);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .stats { grid-template-columns: 1fr; gap: 1px; }
+    .problem { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+    .stages { padding: 80px 24px; }
+    .stages-grid { grid-template-columns: repeat(2, 1fr); }
+    .how { padding: 80px 24px; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .features { padding: 80px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .founder { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+    .partner-grid { grid-template-columns: 1fr; }
+    .partner { padding: 80px 24px; }
+    .mission { padding: 80px 24px; }
+    .cta { padding: 80px 24px; }
+    footer { padding: 40px 24px; flex-direction: column; text-align: center; }
+    .hero { padding: 100px 24px 60px; }
+    .stages-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Re<span>Rhythm</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#partner">Partner</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="mailto:founder@rerhythm.in" class="nav-cta">Contact Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    🏆 Winner — IEEE INNERVE Hackathon 2026
+  </div>
+  <h1>When every second counts —<br/><span>ReRhythm</span> is already there.</h1>
+  <p>India's first AR-guided cardiac emergency ecosystem. Real-time CPR guidance, AI hand detection, and a 500m alert network — for everyone, free.</p>
+  <div class="hero-buttons">
+    <a href="#" class="btn-primary">📱 Download App</a>
+    <a href="#partner" class="btn-secondary">🤝 Partner With Us</a>
+  </div>
+
+  <!-- ECG Animation -->
+  <div class="ecg-container">
+    <svg viewBox="0 0 700 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline class="ecg-line"
+        points="0,40 60,40 80,40 90,10 100,70 110,20 125,60 140,40 200,40 220,40 230,15 240,65 250,20 265,55 280,40 340,40 360,40 370,12 380,68 390,18 405,58 420,40 480,40 500,40 510,14 520,66 530,20 545,56 560,40 620,40 640,40 650,12 660,68 670,20 685,56 700,40"
+        stroke="#E53935" stroke-width="2" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat fade-up">
+    <div class="stat-num">350K+</div>
+    <div class="stat-label">Cardiac arrests outside hospitals<br/>in India every year</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">10%</div>
+    <div class="stat-label">Survival drops every minute<br/>without CPR</div>
+  </div>
+  <div class="stat fade-up">
+    <div class="stat-num">&lt;1%</div>
+    <div class="stat-label">Indians who know how<br/>to perform CPR correctly</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="about">
+  <div class="fade-up">
+    <div class="section-tag">The Problem</div>
+    <h2 class="section-title">Help is coming.<br/>But not fast enough.</h2>
+    <p class="section-body">The ambulance takes 8–10 minutes on average. The brain starts dying in 4 minutes without CPR. The people already standing there — who love that person the most — have absolutely no idea what to do. Not because they don't care. Because nobody ever taught them.</p>
+  </div>
+  <div class="problem-stats fade-up">
+    <div class="problem-stat-card">
+      <div class="problem-stat-icon">🚑</div>
+      <div>
+        <div class="problem-stat-num">8–10 min</div>
+        <div class="problem-stat-text">Average ambulance response time in Indian cities</div>
+      </div>
+    </div>
+    <div class="problem-stat-card">
+      <div class="problem-stat-icon">🧠</div>
+      <div>
+        <div class="problem-stat-num">4 minutes</div>
+        <div class="problem-stat-text">Until brain damage begins without CPR</div>
+      </div>
+    </div>
+    <div class="problem-stat-card">
+      <div class="problem-stat-icon">💔</div>
+      <div>
+        <div class="problem-stat-num">96%</div>
+        <div class="problem-stat-text">Of bystanders don't know what to do in a cardiac emergency</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STAGES -->
+<section class="stages">
+  <div class="stages-header fade-up">
+    <div class="section-tag">Our Ecosystem</div>
+    <h2 class="section-title">Five stages.<br/>One platform.</h2>
+  </div>
+  <div class="stages-grid">
+    <div class="stage-card active fade-up">
+      <div class="stage-icon">🛡️</div>
+      <div class="stage-name">Prevention</div>
+      <div class="stage-desc">Personalised heart risk assessment. Know your risk before crisis hits.</div>
+    </div>
+    <div class="stage-card fade-up">
+      <div class="stage-icon">🔍</div>
+      <div class="stage-name">Detection</div>
+      <div class="stage-desc">Wearable integration to detect cardiac anomalies before collapse.</div>
+      <span class="stage-soon">Coming Soon</span>
+    </div>
+    <div class="stage-card active fade-up">
+      <div class="stage-icon">🚨</div>
+      <div class="stage-name">Response</div>
+      <div class="stage-desc">Real-time AR CPR guidance with AI hand detection and compression feedback.</div>
+    </div>
+    <div class="stage-card fade-up">
+      <div class="stage-icon">📊</div>
+      <div class="stage-name">Retention</div>
+      <div class="stage-desc">Session analytics, compression history and performance insights.</div>
+      <span class="stage-soon">Coming Soon</span>
+    </div>
+    <div class="stage-card active fade-up">
+      <div class="stage-icon">💊</div>
+      <div class="stage-name">Recovery</div>
+      <div class="stage-desc">Verified cardiologist network for post-emergency consultation and care.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="how-header fade-up">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Three steps.<br/>One life saved.</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-title">Open ReRhythm</div>
+      <div class="step-desc">Launch the app the moment someone collapses near you. One tap sends an emergency alert to everyone within 500 metres and calls the ambulance.</div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-title">Follow AR Guidance</div>
+      <div class="step-desc">Camera opens. AI overlays real-time guidance directly on the person's chest — showing exactly where to place your hands and tracking compression rate live.</div>
+    </div>
+    <div class="step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-title">Save a Life</div>
+      <div class="step-desc">Voice coaching, haptic feedback, and visual AR guidance keep your rhythm perfect — 100 to 120 BPM. No training. No experience. Anyone can do this.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header fade-up">
+    <div class="section-tag">Features</div>
+    <h2 class="section-title">Everything you need.<br/>In the moment that matters.</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-up">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">AR Hand Placement</div>
+      <div class="feature-desc">Real-time augmented reality overlay shows exactly where to place your hands on the chest. Powered by Google MediaPipe AI.</div>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Live Compression Feedback</div>
+      <div class="feature-desc">Tracks your compression rate in real time. Tells you if you're too fast or too slow. Target: 100–120 BPM.</div>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">🎤</div>
+      <div class="feature-title">Voice Coaching</div>
+      <div class="feature-desc">Step-by-step audio instructions guide you through every stage. No reading required. Works even in complete panic.</div>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">📍</div>
+      <div class="feature-title">500m Alert System</div>
+      <div class="feature-desc">Instantly notifies every ReRhythm user within 500 metres with the victim's live location. Crowdsourcing help in seconds.</div>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">🚑</div>
+      <div class="feature-title">One-Tap 112 Call</div>
+      <div class="feature-desc">Calls emergency services immediately with a single tap. No fumbling. No delay. Integrated directly into the emergency flow.</div>
+    </div>
+    <div class="feature-card fade-up">
+      <div class="feature-icon">👨‍⚕️</div>
+      <div class="feature-title">Cardiologist Network</div>
+      <div class="feature-desc">Post-emergency recovery support from verified cardiologists. Because survival is just the beginning.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder" id="founder">
+  <div class="founder-card fade-up">
+    <div class="founder-avatar">👩‍💻</div>
+    <div class="founder-name">Anushka Makhija</div>
+    <div class="founder-title">Founder & CEO, ReRhythm</div>
+    <div class="founder-tags">
+      <span class="tag">🥋 State Judo Medalist</span>
+      <span class="tag">🏆 National Abacus Champion</span>
+      <span class="tag">💻 Full Stack Developer</span>
+      <span class="tag">🎤 MUN Debater</span>
+      <span class="tag">👑 Girl Prefect</span>
+      <span class="tag">🛡️ Safety Committee President</span>
+    </div>
+  </div>
+  <div class="fade-up">
+    <div class="section-tag">The Founder</div>
+    <h2 class="section-title">Built by someone who refused to accept the problem.</h2>
+    <p class="founder-bio">
+      At 13, while most students were learning the basics of computers, <strong>Anushka Makhija</strong> was already building apps. By the time she reached college, she had won competitions at state and national level — not just in technology, but in Judo, Abacus, Debate and Model United Nations.<br/><br/>
+      Today, she is a <strong>1st year Engineering student at GGSIPU, Delhi</strong> — and the sole founder of ReRhythm, India's first AR-guided cardiac emergency ecosystem.<br/><br/>
+      She built ReRhythm because she believes one thing deeply:
+    </p>
+    <div class="founder-quote">
+      "Saving a life should never require prior training. Anyone — anywhere — should be able to help. That is what ReRhythm is for."
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission">
+  <div class="mission-inner fade-up">
+    <div class="section-tag">Our Mission</div>
+    <h2>Spreading <span>miracles</span><br/>in the lives of everyone.</h2>
+    <p>SMILE — our founding philosophy. Every feature we build, every partnership we form, every life we touch is guided by one purpose: making sure that the next person who collapses near you — gets the help they deserve.</p>
+    <a href="mailto:founder@rerhythm.in" class="btn-primary">Get in Touch ↗</a>
+  </div>
+</section>
+
+<!-- PARTNER -->
+<section class="partner" id="partner">
+  <div class="partner-header fade-up">
+    <div class="section-tag">Partner With Us</div>
+    <h2 class="section-title">Let's save lives<br/>together.</h2>
+  </div>
+  <div class="partner-grid">
+    <div class="partner-card fade-up">
+      <div class="partner-type">Hospitals & Clinics</div>
+      <div class="partner-title">Clinical Partnership</div>
+      <ul class="partner-list">
+        <li>White-label CPR training for staff</li>
+        <li>Patient family preparedness program</li>
+        <li>Custom analytics dashboard</li>
+        <li>CSR initiative — publicize your impact</li>
+        <li>Starting ₹50,000/year</li>
+      </ul>
+    </div>
+    <div class="partner-card fade-up">
+      <div class="partner-type">Schools & Colleges</div>
+      <div class="partner-title">Education Partnership</div>
+      <ul class="partner-list">
+        <li>Student CPR awareness program</li>
+        <li>NCC and NSS integration</li>
+        <li>Teacher training included</li>
+        <li>CPR certification workshops</li>
+        <li>Starting ₹10,000/year</li>
+      </ul>
+    </div>
+    <div class="partner-card fade-up">
+      <div class="partner-type">Corporates & Insurers</div>
+      <div class="partner-title">Corporate Partnership</div>
+      <ul class="partner-list">
+        <li>Employee emergency preparedness</li>
+        <li>ESG and CSR reporting benefit</li>
+        <li>Insurance policyholder benefit</li>
+        <li>Custom branded experience</li>
+        <li>Starting ₹25,000/year</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-glow"></div>
+  <div class="section-tag">Download Free</div>
+  <h2>Every heart deserves<br/>a <span>second chance.</span></h2>
+  <p>Download ReRhythm free. Because the next person who needs CPR — could be someone you love.</p>
+  <div class="hero-buttons">
+    <a href="#" class="btn-primary">📱 Download on Android</a>
+    <a href="mailto:founder@rerhythm.in" class="btn-secondary">✉️ Contact Us</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Re<span>Rhythm</span></div>
+    <div class="footer-tagline">Restoring the rhythm of life ❤️</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#partner">Partner</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="mailto:founder@rerhythm.in">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 ReRhythm Technologies. All rights reserved.<br/>founder@rerhythm.in · rerhythm.in</div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
